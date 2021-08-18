@@ -12,58 +12,55 @@ type FeeClassification = {
 
 type DetailProps = {
   classification: FeeClassification;
-  onNumOfPeopleChange: (num: number) => void;
+  handleNumOfPeopleChange: (num: number) => void;
 }
 
-class Detail extends React.Component<DetailProps, {}> {
+const Detail: React.FC<DetailProps> = ({ classification, handleNumOfPeopleChange }) => {
 
-  onNumOfPeopleChange(e: React.ChangeEvent<HTMLSelectElement>): void {
+  const onNumOfPeopleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const num: number = Number(e.target.value);
-    this.props.onNumOfPeopleChange(num);
+    handleNumOfPeopleChange(num);
   }
 
-  render() {
-    return (
-      <div >
-        <div className="classification-name">{this.props.classification.name}</div>
-        <div className="description">{this.props.classification.description}</div>
-        <div className="unit-price">{this.props.classification.unitPrice}円</div>
-        <div className="num-people">
-          <select value={this.props.classification.numOfPeople} onChange={e => this.onNumOfPeopleChange(e)}>
-            <option value="0">0</option>
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-          </select>
-          <span>名</span>
-        </div>
+  return (
+    <div >
+      <div className="classification-name">{classification.name}</div>
+      <div className="description">{classification.description}</div>
+      <div className="unit-price">{classification.unitPrice}円</div>
+      <div className="num-people">
+        <select value={classification.numOfPeople} onChange={e => onNumOfPeopleChange(e)}>
+          <option value="0">0</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+        </select>
+        <span>名</span>
       </div>
-    );
-  }
+    </div>
+  );
 }
+
 
 type SummaryProps = {
   numOfPeople: number;
   totalAmount: number;
 }
 
-class Summary extends React.Component<SummaryProps, {}> {
-  render() {
-    return (
-      <div>
-        <div className="party">
-          <input type="text" className="party" value={this.props.numOfPeople} />
-          <span>名様</span>
-        </div>
-        <div className="total-amount">
-          <span>合計</span>
-          <input type="text" className="total-amount" value={this.props.totalAmount} />
-          <span>円</span>
-        </div>
+const Summary: React.FC<SummaryProps> = ({ numOfPeople, totalAmount }) => {
+  return (
+    <div>
+      <div className="party">
+        <input type="text" className="party" value={numOfPeople} />
+        <span>名様</span>
       </div>
-    );
-  }
+      <div className="total-amount">
+        <span>合計</span>
+        <input type="text" className="total-amount" value={totalAmount} />
+        <span>円</span>
+      </div>
+    </div>
+  );
 }
 
 
@@ -118,7 +115,7 @@ class AdmissionFeeCalculator extends React.Component<{}, AdmissionFeeCalculatorS
   render() {
     const details = this.state.feeClassifications.map((fc, idx) => {
       return (
-        <Detail key={idx.toString()} classification={fc} onNumOfPeopleChange={n => this.handleNumOfPeopleChange(idx, n)} />
+        <Detail key={idx.toString()} classification={fc} handleNumOfPeopleChange={n => this.handleNumOfPeopleChange(idx, n)} />
       );
     });
     const numOfPeople = this.state.feeClassifications.map(fc => fc.numOfPeople).reduce((p, c) => p + c);
