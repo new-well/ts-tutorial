@@ -2,6 +2,10 @@ import React from 'react';
 import './App.css';
 
 
+type DetailState = {
+  numOfPeople: number;
+}
+
 type FeeClassification = {
   name: string;
   description: string;
@@ -14,7 +18,22 @@ type DetailProps = {
   classification: FeeClassification;
 }
 
-class Detail extends React.Component<DetailProps, {}> {
+class Detail extends React.Component<DetailProps, DetailState> {
+
+  constructor(props: DetailProps) {
+    super(props);
+    this.state = {
+      numOfPeople: props.classification.numOfPeople,
+    }
+  }
+
+  onNumOfPeopleChange(e: React.ChangeEvent<HTMLSelectElement>): void {
+    const num: number = Number(e.target.value);
+    this.setState({
+      numOfPeople: num
+    });
+  }
+
   render() {
     return (
       <div >
@@ -22,7 +41,7 @@ class Detail extends React.Component<DetailProps, {}> {
         <div className="description">{this.props.classification.description}</div>
         <div className="unit-price">{this.props.classification.unitPrice}円</div>
         <div className="num-people">
-          <select value={this.props.classification.numOfPeople}>
+          <select value={this.state.numOfPeople} onChange={e => this.onNumOfPeopleChange(e)}>
             <option value="0">0</option>
             <option value="1">1</option>
             <option value="2">2</option>
